@@ -39,8 +39,24 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
+}
 
+Person.prototype = {
+  eat(someFood) {
+    if (this.stomach.length < 10) {
+      this.stomach.push(someFood);
+    }
+  },
+  poop() {
+    this.stomach = [];
+  },
+  toString() {
+    return `${this.name}, ${this.age}`;
+  }
 }
 
 /*
@@ -57,8 +73,32 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
+}
 
+Car.prototype = {
+  fill(gallons) {
+    this.tank += gallons;
+  },
+
+  drive(distance) {
+    const gallonsConsumed = distance/this.milesPerGallon;
+
+    if (this.tank - gallonsConsumed >= 0) {
+      this.tank -= gallonsConsumed;
+      this.odometer += distance;
+      return;
+    } else if (this.tank - gallonsConsumed < 0) {
+      this.odometer += this.tank * this.milesPerGallon;
+      this.tank = 0;
+    }
+
+    return `I ran out of fuel at ${this.odometer} mile!`;
+  }
 }
 
 /*
@@ -68,18 +108,28 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this['favoriteToy'] = favoriteToy;
+}
 
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function() {
+  return `Playing with ${this.favoriteToy}`
 }
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+
+  1. Window Binding or Global Binding, where a function is called from the global execution context and 'this' refers to the window object.
+
+  2. Implicit Binding, in which 'this' refers the object being accessed.
+
+  3. New Binding, in which 'this refers to the new instance of an object being created.
+
+  4. Explicit Binding, which allows us to tell the software exactly what its reference is.
 */
 
 
